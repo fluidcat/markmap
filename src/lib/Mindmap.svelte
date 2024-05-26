@@ -21,6 +21,7 @@
 	} from './stores.js';
 	import * as svg2png from './svg2png.js';
 	import { Octokit } from "@octokit/core";
+	import { spring } from "svelte/motion";
 
 	export let maxWidth;
 	export let style;
@@ -274,16 +275,29 @@
 		}
 	}
 
+	const editor_p = spring(0, {
+		precision: 1,
+		hard: true
+	});
+
+	$: if($show) {
+		editor_p.set(28);
+	} else {
+		editor_p.set(0);
+	}
+
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
-<div bind:clientWidth={w} bind:clientHeight={h} style="width:98vw; height:98vh">
+
+<div bind:clientWidth={w} bind:clientHeight={h} style="width: {98-$editor_p}vw; height:98vh; margin-left: {$editor_p}vw" >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<svg id="markmap" bind:this={mindmap} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 		style="width:100%; height:100%" on:click={handleHide}>
 	</svg>
 </div>
+
 <style>
 
 	svg {

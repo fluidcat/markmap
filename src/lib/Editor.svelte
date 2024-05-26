@@ -17,8 +17,8 @@
 		show,
 		markdownSource
 	} from './stores.js'
-	import url from './url.js';
-	import { Svroller } from 'svrollbar'
+  	import { quartInOut } from "svelte/easing";
+	import { fly } from "svelte/transition";
 
 	let textArea;
 	let editor;
@@ -52,10 +52,10 @@
 		({
 			CodeJar
 		} = await import("codejar"))
-		jar = await CodeJar(editor, my, {history:true});
+		jar = CodeJar(editor, my, { history: true });
 	})
 
-	$: if ($show == true) {		
+	$: if ($show == true) {
 		setTimeout(function () {
 			textArea.firstChild.focus();
 		}, 0);
@@ -71,7 +71,11 @@
 	{#await CodeJar}
 		<div>Éditeur en cours de chargement</div>
 	{:then}
-		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class:hidden={!$show} class="editor"></pre>
+	{#if $show}
+		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class:hidden={!$show} class="editor" 
+		transition:fly="{{delay: 5, duration: 500, x: -300, easing: quartInOut}}"></pre>
+	{/if}
+		
 	{:catch error}
 		<textarea bind:value={$markdownSource} rows="20" cols="50" class:hidden={!$show}></textarea>
 	{/await}
@@ -106,11 +110,14 @@
 		font-size: 14px;
 		margin-top: 5em;
 		margin-left: 1em;
-		width: 500px;
+		width: 28vw;
 		height: 85vh;
 		position: absolute;
 		z-index: 1;
 		background-color: #ffffffde;
+		white-space: pre-wrap;
+		overflow: scroll;
+		outline: none;
 	}
 
 	textarea,
