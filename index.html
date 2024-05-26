@@ -7,15 +7,15 @@
 		<link rel="icon" href="./favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
-		<link href="./_app/immutable/assets/2.d100163e.css" rel="stylesheet">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.2ac75393.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.a77a79ab.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.ce783312.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.04e09e18.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.7b141c79.js">
+		<link href="./_app/immutable/assets/2.2e9e6c79.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.d57f50e6.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.f90aabab.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.98c71e0e.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.fda17e65.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.9aeb6037.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/preload-helper.a4192956.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.de58d2d7.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/2.5dec7295.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.cde58f2d.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.3873ef07.js">
 	</head>
 	<body>
 		<div style="display: contents">
@@ -33,94 +33,36 @@
 		<a href="" target="_blank" rel="noreferrer" class="svelte-4wmhyd">❓</a>
 </nav>
 
-<main><div class="svelte-wlugj6">
-		<pre contenteditable="true" class="editor svelte-wlugj6 hidden">---
+<main><div class="svelte-q9byra">
+		<pre contenteditable="true" class="editor svelte-q9byra" style="margin-left: -30vw">---
 maxWidth: 600
 ---
 
-# myMarkmap
-
-## Un outil libre \\  et gratuit
-
-### [Sources](https://forge.aeif.fr/eyssette/myMarkmap/) sur la Forge des\\Communs Numériques Éducatifs
-### _Auteur_ : [Cédric Eyssette](https://eyssette.github.io/)
-### Créé à partir du \\  logiciel [markmap](https://markmap.js.org/)
-
-## Pour faire des \\  cartes mentales
-
-- Clic sur ✒️ en haut à gauche pour **éditer** \\ sa carte mentale (_raccourci clavier : `e`_) \\ On utilise le **Markdown** pour créer des branches
-  - `# Titre`  pour le niveau 1
-  - `## Sous-titre`  pour le niveau 2
-  - `### Niveau 3`,  `#### Niveau 4` …
-  - Ou bien, on fait une liste à puces \\ `- Niveau 3` \\ 　`  - Niveau 4` \\ `- Niveau 3` \\ (on ajoute 2 espaces avant  \\ pour  passer à un autre niveau)
-- Clic sur 👓   pour **cacher** la fenêtre d'édition \\et **voir** seulement la carte mentale \\ (_raccourci clavier : `Escape`_)
-- **Enregistrer** et \\**partager** sa \\carte mentale
-  - Clic sur 💾 pour **enregistrer**  la carte au format _svg_ \\[image fixe]  (_raccourci clavier : `s`_)
-  - Clic sur 🌐 pour **enregistrer** au format HTML \\[interactivité possible] (_raccourci clavier : `h`_)
-  - Clic sur 🔗 pour copier un **lien** de **partage** \\de la carte mentale (_raccourci clavier : `l`_)
-  - Il est recommandé d'enregistrer le texte \\de sa carte mentale quelque part pour \\pouvoir modifier plus tard sa carte mentale
-    - On peut mettre son texte \\ **sur une forge** ou sur [CodiMD](https://codimd.apps.education.fr)  \\ et l'afficher avec myMarkmap <!--fold-->
-      - \\ `https://mymarkmap.vercel.app/#URL`
-      - En cas de problème : \\ `https://mymarkmap.vercel.app/#https://corsproxy.io/%3FURL`
-      - Sur une instance Gitlab, il faut utiliser un fichier `.gitlab-ci.yml` pour publier le fichier md sur une page publique et utiliser cette adresse comme URL
-
-## Comment naviguer \\dans la carte ?
-- \\\\Clic sur les **cercles** à l'intersection \\ des différentes branches pour \\ **afficher ou masquer la suite**
-  - \\**Alt+clic** sur un cercle pour afficher \\ seulement la branche en question
-- **Autres raccourcis**
-  - **Alt+clic** sur le texte d'une branche pour la masquer
-  - `m` pour masquer ou réafficher la barre de menu
-  - `r` pour désactiver ou réactiver le redimensionnement automatique
-
-## Usages plus \\  avancés  <!--fold-->
-
-### Des balises pour \\ **contrôler l'affichage** \\ de la carte
-
-#### **Markdown**  <!--fold-->
-
-- `**texte**` : pour mettre en **gras**
-- `_texte_` : pour mettre en _italiques_
-- `[lien](URL)` : pour insérer un [lien](https://eyssette.github.io/)
-- `![](URL)` : pour insérer une image
-	- `![h-25](URL)` : pour spécifier la hauteur  \\de l'image (de h-25, h-50 … à h-200)
-- ``` `code` ``` : Pour insérer du `code` 
-- `==texte==`: Pour surligner du ==texte==
-- `++texte++`: Pour souligner du ++texte++
-
-#### **HTML** <!--fold-->
-
-- `<br>` ou `\\` pour forcer le passage à la ligne
-- `<span style="...">texte</span>` \\ pour changer le style d'un élément
-  
-#### **Autres \\ balises** <!--fold-->
-
-- `<!--fold-->` en fin de ligne pour que les \\ sous-branches soient cachées par défaut : \\ il faut cliquer sur le cercle pour afficher la suite<!-- fold-->
-    - Cette branche est cachée par défaut !
-    - Cette branche aussi !
-- `:code_emoji:` : pour insérer un code pour un emoji [:link:](https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json)
-- `{{partie masquée}}` pour masquer une partie \\ d'un texte :  voici par exemple un {{passage}} masqué \\ (cliquer dessus pour afficher / masquer à nouveau)
-
-### Un **en-tête** (YAML) \\ pour des options de \\configuration plus avancées <!--fold-->
-
-- Pour spécifier la largeur \\ maximale d'une branche
-	- ```maxWidth: 300```
-- Pour empêcher le changement de \\couleur des sous-branches à partir \\d'un certain niveau
-	- ```colorFreezeLevel: 2```  \\ (pour que chaque branche \\ait sa propre couleur)
-- Pour ajouter des styles \\CSS spécifiques
-	- ```style: strong{color:red}```
-- Pour ajouter un titre
-	- ```title: Mon titre```
-- Pour masquer par défaut \\les sous-branches à partir\\ d'un certain niveau
-	- ```initialExpandLevel: 1```
-- Pour forcer l'ouverture des \\liens dans un nouvel onglet
-  - ```openLinksInNewTab: true```
+# 主题
+## 1
+### 1.1
+#### 1.1.1
+- 末项1
+- 末项2
+  - 末项2-1
+  - 末项2-2
+- 末项3
+#### 1.1.2
+### 1.2
+### 1.3
+## 2
+### 2.1
+#### 2.1.1
+#### 2.1.2
+### 2.2
 </pre>
 	
 </div>
 
 	
 
-<div style="width:98vw; height:98vh">
+
+<div style="width: 98vw; height:98vh; margin-left: 0vw">
 	<svg id="markmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:100%; height:100%" class="svelte-1gzn36p"></svg>
 </div></main>
 
@@ -128,7 +70,7 @@ maxWidth: 600
 			
 			<script>
 				{
-					__sveltekit_1pih7w4 = {
+					__sveltekit_xzhpsj = {
 						base: new URL(".", location).pathname.slice(0, -1),
 						env: {}
 					};
@@ -138,8 +80,8 @@ maxWidth: 600
 					const data = [null,null];
 
 					Promise.all([
-						import("./_app/immutable/entry/start.2ac75393.js"),
-						import("./_app/immutable/entry/app.7b141c79.js")
+						import("./_app/immutable/entry/start.d57f50e6.js"),
+						import("./_app/immutable/entry/app.9aeb6037.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2],
