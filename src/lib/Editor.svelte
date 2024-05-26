@@ -123,7 +123,6 @@
 		z-index: 1;
 		background-color: #ffffffde;
 		white-space: pre-wrap;
-		overflow: scroll;
 		outline: none;
 	}
 
@@ -142,7 +141,6 @@
 		line-height: 20px;
 		padding: 10px;
 		tab-size: 2;
-		resize: both!important;
 	}
 
 	:global(.language-xml *) {
