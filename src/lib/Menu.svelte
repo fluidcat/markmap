@@ -115,7 +115,7 @@
 		{#if showNotification}
 		<div id="shareNotification" in:fly="{{ y: 50, duration: 1000 }}" out:fade>引用链接已复制到剪切板</div>
 		{/if}
-		<a href="{$baseURL}" target="_blank" rel="noreferrer">❓</a>
+		<!-- <a href="{$baseURL}" target="_blank" rel="noreferrer">❓</a> -->
 </nav>
 
 <style>

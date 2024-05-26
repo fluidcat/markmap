@@ -64,7 +64,7 @@
 		{if (jar.toString() != $markdownSource) {markdownSource.update(n=>code)}}
 	)}
 
-	const editor_p = spring(-30, {
+	const editor_p = spring(-40, {
 		precision: 0.01,
 		soft: true
 	});
@@ -72,7 +72,7 @@
 	$: if($show) {
 		editor_p.set(0);
 	} else {
-		editor_p.set(-30);
+		editor_p.set(-40);
 	}
 
 </script>
