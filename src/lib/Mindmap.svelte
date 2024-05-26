@@ -11,12 +11,17 @@
 	import {deriveOptions} from 'markmap-view';
 	import {
 		mindmapSaveAsSvg,
+		mindmapSaveAsPng,
 		mindmapSaveAsHtml,
+		mindmapShareByGithub,
 		wValue,
 		hValue,
 		markdownSource,
 		show
 	} from './stores.js';
+	import * as svg2png from './svg2png.js';
+	import { Octokit } from "@octokit/core";
+
 	export let maxWidth;
 	export let style;
 	export let title;
@@ -148,15 +153,87 @@
 		const boundingBox = getBBox(mindmap)
 		mm = mm.replace(/<br>/g, '<br/>')
 		mm = mm.replace(/\n/g, ' ')
-		mm = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"><svg id="markmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="' + mindmap.className['baseVal'] + '" style="width:100%; height:100%;" viewBox="' + boundingBox.x + ' ' + (boundingBox.y-5) + ' ' + (boundingBox.w) + ' ' + (boundingBox.h+30) + '">'+'<use xlink:href=""><title>'+title+'</title></use>'+'<desc>'+description.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&lt;')+'</desc>'+ mm.replace(/<title>.*<\/title>/,'') + '</svg>'
+		mm = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">'
+		+ '<svg id="markmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+		+ 'class="' + mindmap.className['baseVal'] + '" '
+		+ 'width="'+boundingBox.w+'" height="'+boundingBox.h+30+'" '
+		+ 'style="width:100%; height:100%;" viewBox="' + boundingBox.x + ' ' + (boundingBox.y-5) + ' ' + (boundingBox.w) + ' ' + (boundingBox.h+30) + '">'
+		+'<use xlink:href=""><title>'+title+'</title></use>'+'<desc>'+description.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&lt;')+'</desc>'+ mm.replace(/<title>.*<\/title>/,'') + '</svg>'
 		return mm;
 	}
 
-	function mindMapSaveAsSvgCreateFile() {
-		const file = new File([createSVG(mindmap.innerHTML)], "mindmap.svg", {
+	function svgDownload() {
+		const svgXml = createSVG(mindmap.innerHTML)
+		const filename = mindmap.getRootNode().getElementsByTagName('title')[0].getHTML() + '.svg';
+		const file = new File([svgXml], filename, {
 			type: "text/plain;charset=utf-8"
 		});
 		saveAs(file);
+	}
+	function pngDownload() {
+		const svgXml = createSVG(mindmap.innerHTML)
+		const filename = mindmap.getRootNode().getElementsByTagName('title')[0].getHTML() + '.png';
+		svg2png
+			.svgToPng(svgXml)
+			.then(b64 => saveAs(b64toFile(b64, filename)));
+	}
+
+	async function getGithubUrl() {
+		const svgXml = createSVG(mindmap.innerHTML)
+		const b64 = await svg2png.svgToPng(svgXml)
+		return uploadGithub(b64)
+	}
+
+	async function uploadGithub(b64) {
+		const repo = 'fluidcat/imgs' // 填你的仓库 repo
+		const cutToken = 'ghp_RF1p3neztheprz3Pix' // 填你的 Token
+		const tailToken = '29spZYiaKPdL3OtULP'
+		const curr = getDatatimeStr();
+		const path = `md/${curr.substring(0,4)}/${curr.substring(4,6)}/${curr}.png`;
+
+		const octokit = new Octokit({ auth: `${cutToken}${tailToken}`});
+
+		const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+			owner: 'fluidcat',
+			repo: 'imgs',
+			branch: 'md',
+			path: path,
+			message: 'markmap server upload',
+			committer: {
+				name: 'fluidcat',
+				email: 'belin0@163.com'
+			},
+			content: b64.split(",")[1],
+			headers: {
+				'X-GitHub-Api-Version': '2022-11-28'
+			}
+		})
+		return 'https://cdn.jsdelivr.net/gh/fluidcat/imgs@md/'+ path;
+	}
+
+	function getDatatimeStr(){
+		const date = new Date();
+		const year = date.getFullYear();  
+		const month = (date.getMonth() + 1).toString().padStart(2, '0');  
+		const day = date.getDate().toString().padStart(2, '0'); 
+		const hour = date.getHours().toString().padStart(2, '0');
+		const minute = date.getMinutes().toString().padStart(2, '0');
+		const second = date.getSeconds().toString().padStart(2, '0');
+		const milliSecond = date.getMilliseconds().toString().padStart(3, '0');
+		const formattedDate = `${year}${month}${day}${hour}${minute}${second}${milliSecond}`;  
+		return formattedDate;
+	}
+
+	function b64toFile(data, fileName) {
+    	var arr = data.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+		while (n--) {
+		u8arr[n] = bstr.charCodeAt(n);
+		}
+		return new File([u8arr], fileName, { type: mime });
 	}
 
 	function mindMapSaveAsHtmlCreateFile() {
@@ -169,8 +246,18 @@
 	}
 
 	$: if ($mindmapSaveAsSvg) {
-		mindMapSaveAsSvgCreateFile();
+		svgDownload();
 		mindmapSaveAsSvg.update(n => false)
+	}
+
+	$: if ($mindmapSaveAsPng) {
+		pngDownload();
+		mindmapSaveAsPng.update(n => false)
+	}
+
+	$: if ($mindmapShareByGithub) {
+		getGithubUrl().then(url=>navigator.clipboard.writeText(url));
+		mindmapShareByGithub.update(n => false)
 	}
 
 	$: if ($mindmapSaveAsHtml) {

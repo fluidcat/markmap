@@ -15,6 +15,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@octokit/core": "^6.1.2",
     "@sveltejs/adapter-static": "^1.0.6",
     "codejar": "^3.7.0",
     "file-saver-es": "^2.0.5",
@@ -24,6 +25,7 @@
     "markmap-common": "^0.15.6",
     "markmap-lib": "^0.15.8",
     "markmap-view": "^0.15.8",
-    "node-emoji": "^1.11.0"
+    "node-emoji": "^1.11.0",
+    "svrollbar": "^0.12.0"
   }
 }

@@ -86,6 +86,8 @@ maxWidth: 600
 `));
 export const baseURL = writable('');
 export const mindmapSaveAsSvg = writable(false);
+export const mindmapSaveAsPng = writable(false);
 export const mindmapSaveAsHtml = writable(false);
+export const mindmapShareByGithub = writable(false);
 export const wValue = writable();
 export const hValue = writable();

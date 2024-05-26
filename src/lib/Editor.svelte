@@ -18,6 +18,7 @@
 		markdownSource
 	} from './stores.js'
 	import url from './url.js';
+	import { Svroller } from 'svrollbar'
 
 	let textArea;
 	let editor;
@@ -77,16 +78,39 @@
 </div>
 
 <style>
+	::-webkit-scrollbar {
+		width: 4px;
+		height: 4px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: rgb(239, 239, 239);
+		border-radius: 2px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: #bfbfbf;
+		border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: #bfbfbf;
+	}
+
+	::-webkit-scrollbar-corner {
+		background: #bfbfbf;
+	}
+
 	textarea,
 	:global(.editor) {
 		font-size: 14px;
 		margin-top: 5em;
 		margin-left: 1em;
-		width: 420px;
-		height: 50vh;
+		width: 500px;
+		height: 85vh;
 		position: absolute;
 		z-index: 1;
-		background-color: white;
+		background-color: #ffffffde;
 	}
 
 	textarea,
