@@ -158,7 +158,7 @@
 		+ '<svg id="markmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
 		+ 'class="' + mindmap.className['baseVal'] + '" '
 		+ 'width="'+boundingBox.w+'" height="'+boundingBox.h+30+'" '
-		+ 'style="width:100%; height:100%;" viewBox="' + boundingBox.x + ' ' + (boundingBox.y-5) + ' ' + (boundingBox.w) + ' ' + (boundingBox.h+30) + '">'
+		+ 'style="width:100%; height:100%;" viewBox="' + boundingBox.x + ' ' + (boundingBox.y-15) + ' ' + (boundingBox.w) + ' ' + (boundingBox.h+30) + '">'
 		+'<use xlink:href=""><title>'+title+'</title></use>'+'<desc>'+description.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&lt;')+'</desc>'+ mm.replace(/<title>.*<\/title>/,'') + '</svg>'
 		return mm;
 	}
@@ -275,15 +275,15 @@
 		}
 	}
 
-	const editor_p = spring(0, {
-		precision: 1,
-		hard: true
+	const mindmapDiv = spring(0, {
+		precision: 0.1,
+		soft: true
 	});
 
 	$: if($show) {
-		editor_p.set(28);
+		mindmapDiv.set(28);
 	} else {
-		editor_p.set(0);
+		mindmapDiv.set(0);
 	}
 
 </script>
@@ -291,7 +291,7 @@
 <svelte:window on:keydown={handleKeydown} />
 
 
-<div bind:clientWidth={w} bind:clientHeight={h} style="width: {98-$editor_p}vw; height:98vh; margin-left: {$editor_p}vw" >
+<div bind:clientWidth={w} bind:clientHeight={h} style="width: {98-$mindmapDiv}vw; height:98vh; margin-left: {$mindmapDiv}vw" >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<svg id="markmap" bind:this={mindmap} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 		style="width:100%; height:100%" on:click={handleHide}>

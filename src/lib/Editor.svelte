@@ -17,8 +17,7 @@
 		show,
 		markdownSource
 	} from './stores.js'
-  	import { quartInOut } from "svelte/easing";
-	import { fly } from "svelte/transition";
+	import { spring } from "svelte/motion";
 
 	let textArea;
 	let editor;
@@ -65,17 +64,25 @@
 		{if (jar.toString() != $markdownSource) {markdownSource.update(n=>code)}}
 	)}
 
+	const editor_p = spring(-30, {
+		precision: 0.01,
+		soft: true
+	});
+
+	$: if($show) {
+		editor_p.set(0);
+	} else {
+		editor_p.set(-30);
+	}
+
 </script>
 
 <div bind:this={textArea}>
 	{#await CodeJar}
 		<div>Éditeur en cours de chargement</div>
 	{:then}
-	{#if $show}
-		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class:hidden={!$show} class="editor" 
-		transition:fly="{{delay: 5, duration: 500, x: -300, easing: quartInOut}}"></pre>
-	{/if}
-		
+		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class="editor" 
+			style="margin-left: {$editor_p}vw"></pre>
 	{:catch error}
 		<textarea bind:value={$markdownSource} rows="20" cols="50" class:hidden={!$show}></textarea>
 	{/await}
