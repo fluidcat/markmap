@@ -22,7 +22,6 @@
 	import * as svg2png from './svg2png.js';
 	import { Octokit } from "@octokit/core";
 	import { spring } from "svelte/motion";
-	import { saveAs } from 'file-saver-es';
 	import copy from 'copy-to-clipboard';
 
 	export let maxWidth;
