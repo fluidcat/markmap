@@ -22,6 +22,8 @@
 	import * as svg2png from './svg2png.js';
 	import { Octokit } from "@octokit/core";
 	import { spring } from "svelte/motion";
+	import { saveAs } from 'file-saver-es';
+	import copy from 'copy-to-clipboard';
 
 	export let maxWidth;
 	export let style;
@@ -165,7 +167,7 @@
 
 	function svgDownload() {
 		const svgXml = createSVG(mindmap.innerHTML)
-		const filename = mindmap.getRootNode().getElementsByTagName('title')[0].getHTML() + '.svg';
+		const filename = getDatatimeStr() + '.svg';
 		const file = new File([svgXml], filename, {
 			type: "text/plain;charset=utf-8"
 		});
@@ -173,7 +175,7 @@
 	}
 	function pngDownload() {
 		const svgXml = createSVG(mindmap.innerHTML)
-		const filename = mindmap.getRootNode().getElementsByTagName('title')[0].getHTML() + '.png';
+		const filename = getDatatimeStr() + '.png';
 		svg2png
 			.svgToPng(svgXml)
 			.then(b64 => saveAs(b64toFile(b64, filename)));
@@ -257,7 +259,7 @@
 	}
 
 	$: if ($mindmapShareByGithub) {
-		getGithubUrl().then(url=>navigator.clipboard.writeText(url));
+		getGithubUrl().then(url=> copy(url));
 		mindmapShareByGithub.update(n => false)
 	}
 

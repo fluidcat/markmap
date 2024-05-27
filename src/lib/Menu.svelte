@@ -48,7 +48,6 @@
 
 	function menuShare() {
 		mindmapShareByGithub.update(n => true)
-		toastNotification();
 	}
 
 	function menuShare_bak() {

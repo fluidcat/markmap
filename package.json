@@ -19,6 +19,7 @@
     "@octokit/core": "^6.1.2",
     "@sveltejs/adapter-static": "^1.0.6",
     "codejar": "^3.7.0",
+    "copy-to-clipboard": "^3.3.3",
     "file-saver-es": "^2.0.5",
     "gh-pages": "^5.0.0",
     "highlight.js": "^11.9.0",
