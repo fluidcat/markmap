@@ -8,14 +8,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
 		<link href="./_app/immutable/assets/2.83bb549c.css" rel="stylesheet">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.8621b9b3.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.70b240a6.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index.f90aabab.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.e58e81b8.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.98923a34.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index.fda17e65.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.9a8ff4f4.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.a54cd3c9.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/preload-helper.a4192956.js">
 		<link rel="modulepreload" href="./_app/immutable/nodes/0.cde58f2d.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/2.6957bac6.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.894d309c.js">
 	</head>
 	<body>
 		<div style="display: contents">
@@ -38,23 +38,38 @@
 maxWidth: 600
 ---
 
-# 主题
-## 1
-### 1.1
-#### 1.1.1
-- 末项1
-- 末项2
-  - 末项2-1
-  - 末项2-2
-- 末项3
-#### 1.1.2
-### 1.2
-### 1.3
-## 2
-### 2.1
-#### 2.1.1
-#### 2.1.2
-### 2.2
+# 一个`#`表示中心主题
+## 开头每多一个`#`表示往下发散下级分支
+## 比如两个`##`
+### 三个`###`
+#### 四个`####`
+### 没有下级，但是有内容项可以用"`-`加空格"
+- 打车费: 100
+- 餐饮费: 34
+- 高温补贴: 500
+
+## 建议空行写法
+
+- 比如这里
+- 看起来更加清晰
+- for Emacs
+
+## 其他功能介绍
+
+Note that if blocks and lists appear at the same level, the lists will be ignored.
+
+### Lists
+
+- 超链接功能, 如：[百度搜索](https://www.baidu.com)
+- 加粗写法：**重点加粗** 
+- 删除线：~~del~~ 
+- 文字倾斜：*italic* 
+- 文字高亮：==highlight==
+- 行内代码：`inline code`
+- [x] 打勾，中括号前面不能有文字
+- [ ] 不打勾，中括号前面不能有文字
+- 数学公式: Katex: $x = {-b \pm \sqrt{b^2-4ac} \over 2a}$ <!-- fold -->
+  - [其他公式例子](#?d=gist:af76a4c245b302206b16aec503dbe07b:katex.md) 
 </pre>
 	
 </div>
@@ -70,7 +85,7 @@ maxWidth: 600
 			
 			<script>
 				{
-					__sveltekit_1vjzunt = {
+					__sveltekit_wdpvnd = {
 						base: new URL(".", location).pathname.slice(0, -1),
 						env: {}
 					};
@@ -80,8 +95,8 @@ maxWidth: 600
 					const data = [null,null];
 
 					Promise.all([
-						import("./_app/immutable/entry/start.8621b9b3.js"),
-						import("./_app/immutable/entry/app.9a8ff4f4.js")
+						import("./_app/immutable/entry/start.70b240a6.js"),
+						import("./_app/immutable/entry/app.a54cd3c9.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2],
