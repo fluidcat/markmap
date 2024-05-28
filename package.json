@@ -2,6 +2,7 @@
   "name": "mymarkmapapp",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://mind.86868866.xyz",
   "scripts": {
     "dev": "vite dev --host 0.0.0.0",
     "build": "vite build",
