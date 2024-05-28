@@ -81,7 +81,7 @@
 	{#await CodeJar}
 		<div>Éditeur en cours de chargement</div>
 	{:then}
-		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class="editor" 
+		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class="editor"
 			style="margin-left: {$editor_p}vw"></pre>
 	{:catch error}
 		<textarea bind:value={$markdownSource} rows="20" cols="50" class:hidden={!$show}></textarea>
