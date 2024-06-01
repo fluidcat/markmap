@@ -107,8 +107,9 @@
 
 <nav id="menu" bind:this={menu}>
 	{#if $show}<a href="#edit" on:click|preventDefault={menuView}>👓</a>{:else}<a href="#edit" on:click|preventDefault={menuEdit}>✒️</a>{/if}
-		<a href="#saveHTML" use:tooltip title='保存为网页' on:click|preventDefault={menuSaveAsHtml}>🌐</a>
-		<a href="#saveSVG" use:tooltip title='保存为矢量图' on:click|preventDefault={menuSaveAsSvg}>SVG</a>
+		<!-- <a href="#saveHTML" use:tooltip title='保存为网页' on:click|preventDefault={menuSaveAsHtml}>🌐</a> -->
+		<a href="#saveSVG" use:tooltip title='保存为矢量图' on:click|preventDefault={menuSaveAsSvg} 
+			style="background: gray url(saveSvg.png) no-repeat fixed 10px center;">SVG</a>
 		<a href="#saveSVG" use:tooltip title='保存为图片' on:click|preventDefault={menuSaveAsPng}>PNG</a>
 		<a href="#share" use:tooltip title='生成引用链接' on:click|preventDefault={menuShare}>🔗</a>
 		{#if showNotification}

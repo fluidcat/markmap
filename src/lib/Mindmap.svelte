@@ -32,6 +32,7 @@
 	export let openLinksInNewTab;
 
 	let mindmap;
+	let fname;
 	let w;
 	let h;
 	let widthBlockquote;
@@ -100,6 +101,14 @@
 		styleElement.innerHTML=styleCSS;
 		mindmap.appendChild(styleElement);
 		mm=Markmap.create('#markmap', optionsFull, root);
+	
+		if(root.content){
+			let template = document.createElement('template');
+			template.innerHTML = root.content;
+			fname = template.content.lastChild.innerText;
+		} else {
+			fname = 'mindmap';
+		}
 
 		if(openLinksInNewTab) { 
 			const links = mindmap.querySelectorAll('a');
@@ -166,7 +175,7 @@
 
 	function svgDownload() {
 		const svgXml = createSVG(mindmap.innerHTML)
-		const filename = getDatatimeStr() + '.svg';
+		const filename = fname + '.svg';
 		const file = new File([svgXml], filename, {
 			type: "text/plain;charset=utf-8"
 		});
@@ -174,7 +183,7 @@
 	}
 	function pngDownload() {
 		const svgXml = createSVG(mindmap.innerHTML)
-		const filename = getDatatimeStr() + '.png';
+		const filename = fname + '.png';
 		svg2png
 			.svgToPng(svgXml)
 			.then(b64 => saveAs(b64toFile(b64, filename)));
