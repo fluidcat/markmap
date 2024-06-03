@@ -64,7 +64,6 @@ export const createOrUpdateStringFile = async(commitMessage, content, fileName) 
             );
             console.log("文件已更新", response.data);
         } catch (error) {
-            debugger
             if (error.status === 404) { 
                 const option = {
                     owner,

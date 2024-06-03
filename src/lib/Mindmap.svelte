@@ -101,15 +101,22 @@
 		const styleElement = document.createElement("style")
 		styleElement.innerHTML=styleCSS;
 		mindmap.appendChild(styleElement);
-		mm=Markmap.create('#markmap', optionsFull, root);
 	
 		if(root.content){
 			let template = document.createElement('template');
 			template.innerHTML = root.content;
-			fname = template.content.lastChild.innerText;
+			const rootEle = template.content.lastChild;
+			rootEle.style.border='0.05em solid #e7e7e791'
+			rootEle.style['border-radius']='0.3em'
+			rootEle.style.padding='0.3em 0.3em 0.3em 0.3em'
+			rootEle.style.background='rgb(135 135 135 / 57%)'
+			root.content = rootEle.outerHTML;
+			fname = rootEle.innerText;
 		} else {
 			fname = 'mindmap';
 		}
+
+		mm=Markmap.create('#markmap', optionsFull, root);
 
 		if(openLinksInNewTab) { 
 			const links = mindmap.querySelectorAll('a');
