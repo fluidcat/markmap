@@ -20,7 +20,8 @@
 		show
 	} from './stores.js';
 	import * as svg2png from './svg2png.js';
-	import { Octokit } from "@octokit/core";
+	import * as github from "./github.js";
+	import { Base64 } from 'js-base64';
 	import { spring } from "svelte/motion";
 	import copy from 'copy-to-clipboard';
 
@@ -196,31 +197,18 @@
 	}
 
 	async function uploadGithub(b64) {
-		const repo = 'fluidcat/imgs' // 填你的仓库 repo
-		const cutToken = 'ghp_RF1p3neztheprz3Pix' // 填你的 Token
-		const tailToken = '29spZYiaKPdL3OtULP'
 		const curr = getDatatimeStr();
-		const path = `md/${curr.substring(0,4)}/${curr.substring(4,6)}/${curr}.png`;
+		const pngPath = `md/${curr.substring(0,4)}/${curr.substring(4,6)}/${curr}.png`;
+		const markdownPath = `markdown/mindmap-${fname}.md`;
+		const mds = $markdownSource;
 
-		const octokit = new Octokit({ auth: `${cutToken}${tailToken}`});
+		await github.createOrUpdateStringFile('markmap server upload', b64.split(",")[1], pngPath);
 
-		const res = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-			owner: 'fluidcat',
-			repo: 'imgs',
-			branch: 'md',
-			path: path,
-			message: 'markmap server upload',
-			committer: {
-				name: 'fluidcat',
-				email: 'belin0@163.com'
-			},
-			content: b64.split(",")[1],
-			headers: {
-				'X-GitHub-Api-Version': '2022-11-28'
-			}
-		})
-		return 'https://cdn.jsdelivr.net/gh/fluidcat/imgs@md/'+ path;
+		await github.createOrUpdateStringFile(`save ${fname}.md`,  Base64.encode(mds), markdownPath);
+
+		return 'https://cdn.jsdelivr.net/gh/fluidcat/imgs@md/'+ pngPath;
 	}
+
 
 	function getDatatimeStr(){
 		const date = new Date();
@@ -233,6 +221,22 @@
 		const milliSecond = date.getMilliseconds().toString().padStart(3, '0');
 		const formattedDate = `${year}${month}${day}${hour}${minute}${second}${milliSecond}`;  
 		return formattedDate;
+	}
+
+	function stringSha(text) {
+		const bytes =  CryptoJS.lib.WordArray.create(text)
+		const hash = CryptoJS.SHA1(bytes).toString();
+		return hash;
+	}
+
+	function fileSha(file) {
+		let read = new FileReader();
+		read.readAsArrayBuffer(file)
+		read.onload = function () {
+			(async function () {
+				console.log(CryptoJS.SHA1(read.result).toString());
+			})();
+		}
 	}
 
 	function b64toFile(data, fileName) {

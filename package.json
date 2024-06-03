@@ -2,6 +2,7 @@
   "name": "mymarkmapapp",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://mind.86868866.xyz",
   "scripts": {
     "dev": "vite dev --host 0.0.0.0",
     "build": "vite build",
@@ -23,6 +24,7 @@
     "file-saver-es": "^2.0.5",
     "gh-pages": "^5.0.0",
     "highlight.js": "^11.9.0",
+    "js-base64": "^3.7.7",
     "js-yaml": "^4.1.0",
     "markmap-common": "^0.15.6",
     "markmap-lib": "^0.15.8",
