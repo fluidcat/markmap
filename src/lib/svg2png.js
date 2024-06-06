@@ -34,9 +34,17 @@ const loadImage = url => {
  */
 export const imageToPng = (image) => {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
     canvas.width = image.width;
     canvas.height = image.height;
+
+    const ctx = canvas.getContext('2d');
+    
+    // 添加背景
+    ctx.rect(0,0,image.width,image.height);
+    ctx.fillStyle='white'
+    ctx.fill();
+
+    // 画图
     ctx.drawImage(image, 0, 0, image.width, image.height);
     return canvas.toDataURL('image/png');
 };
