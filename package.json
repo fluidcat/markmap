@@ -7,7 +7,7 @@
     "dev": "vite dev --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && touch build/.nojekyll && gh-pages -d build -t true"
+    "deploy": "npm run build && touch build/.nojekyll && cp CNAME build/CNAME && gh-pages -d build -t true"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^1.0.3",

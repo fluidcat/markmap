@@ -6,8 +6,8 @@ import path from "path";
 const repo = 'imgs' // 填你的仓库 repo
 const owner = 'fluidcat'
 const branch = 'md'
-const cutToken = 'ghp_RF1p3neztheprz3Pix' // 填你的 Token
-const tailToken = '29spZYiaKPdL3OtULP'
+const cutToken = 'github_pat_11AEGZHQQ04llk9dZJ6S2s_' // 填你的 Token
+const tailToken = 'QO7HSqwe9XwSTFSbDn0ngAJUIolSOKw2dksjyjIYLm9FT5SME3WvqMjquHh'
 const committer = {name: 'fluidcat',email: 'belin0@163.com'}
 const headers = {'X-GitHub-Api-Version': '2022-11-28'}
 
