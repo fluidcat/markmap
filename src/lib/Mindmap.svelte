@@ -11,12 +11,20 @@
 	import {deriveOptions} from 'markmap-view';
 	import {
 		mindmapSaveAsSvg,
+		mindmapSaveAsPng,
 		mindmapSaveAsHtml,
+		mindmapShareByGithub,
 		wValue,
 		hValue,
 		markdownSource,
 		show
 	} from './stores.js';
+	import * as svg2png from './svg2png.js';
+	import * as github from "./github.js";
+	import { Base64 } from 'js-base64';
+	import { spring } from "svelte/motion";
+	import copy from 'copy-to-clipboard';
+
 	export let maxWidth;
 	export let style;
 	export let title;
@@ -28,6 +36,7 @@
 	export let automaticResize;
 
 	let mindmap;
+	let fname;
 	let w;
 	let h;
 	let widthBlockquote;
@@ -138,6 +147,20 @@
 		styleElement.innerHTML=styleCSS;
 		mindmap.appendChild(styleElement);
 
+		if(root.content){
+			let template = document.createElement('template');
+			template.innerHTML = root.content;
+			const rootEle = template.content.lastChild;
+			rootEle.style.border='0.05em solid #e7e7e791'
+			rootEle.style['border-radius']='0.3em'
+			rootEle.style.padding='0.3em 0.3em 0.3em 0.3em'
+			rootEle.style.background='rgb(135 135 135 / 57%)'
+			root.content = rootEle.outerHTML;
+			fname = rootEle.innerText;
+		} else {
+			fname = 'mindmap';
+		}
+
 		mm=Markmap.create('#markmap', optionsFull, root);
 
 
@@ -150,7 +173,7 @@
 			setLinksToOpenInNewTab()
 		}
 
-		
+
 
 	})
 
@@ -225,15 +248,90 @@
 		const boundingBox = getBBox(mindmap)
 		mm = mm.replace(/<br>/g, '<br/>')
 		mm = mm.replace(/\n/g, ' ')
-		mm = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"><svg id="markmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="' + mindmap.className['baseVal'] + '" style="width:100%; height:100%;" viewBox="' + boundingBox.x + ' ' + (boundingBox.y-5) + ' ' + (boundingBox.w) + ' ' + (boundingBox.h+30) + '">'+'<use xlink:href=""><title>'+title+'</title></use>'+'<desc>'+description.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&lt;')+'</desc>'+ mm.replace(/<title>.*<\/title>/,'') + '</svg>'
+		mm = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">'
+		+ '<svg id="markmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+		+ 'class="' + mindmap.className['baseVal'] + '" '
+		+ 'width="'+boundingBox.w+'" height="'+(boundingBox.h+30)+'" '
+		+ 'style="width:100%; height:100%;" viewBox="' + boundingBox.x + ' ' + (boundingBox.y-15) + ' ' + (boundingBox.w) + ' ' + (boundingBox.h+30) + '">'
+		+'<use xlink:href=""><title>'+title+'</title></use>'+'<desc>'+description.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&lt;')+'</desc>'+ mm.replace(/<title>.*<\/title>/,'') + '</svg>'
 		return mm;
 	}
 
-	function mindMapSaveAsSvgCreateFile() {
-		const file = new File([createSVG(mindmap.innerHTML)], "mindmap.svg", {
+	function svgDownload() {
+		const svgXml = createSVG(mindmap.innerHTML)
+		const filename = fname + '.svg';
+		const file = new File([svgXml], filename, {
 			type: "text/plain;charset=utf-8"
 		});
 		saveAs(file);
+	}
+	function pngDownload() {
+		const svgXml = createSVG(mindmap.innerHTML)
+		const filename = fname + '.png';
+		svg2png
+			.svgToPng(svgXml)
+			.then(b64 => saveAs(b64toFile(b64, filename)));
+	}
+
+	async function getGithubUrl() {
+		const svgXml = createSVG(mindmap.innerHTML)
+		const b64 = await svg2png.svgToPng(svgXml)
+		return uploadGithub(b64)
+	}
+
+	async function uploadGithub(b64) {
+		const curr = getDatatimeStr();
+		const pngPath = `md/${curr.substring(0,4)}/${curr.substring(4,6)}/${curr}.png`;
+		const markdownPath = `markdown/mindmap-${fname}.md`;
+		const mds = $markdownSource;
+
+		await github.createOrUpdateStringFile('markmap server upload', b64.split(",")[1], pngPath);
+
+		await github.createOrUpdateStringFile(`save ${fname}.md`,  Base64.encode(mds), markdownPath);
+
+		return 'https://cdn.jsdelivr.net/gh/fluidcat/imgs@md/'+ pngPath;
+	}
+
+
+	function getDatatimeStr(){
+		const date = new Date();
+		const year = date.getFullYear();
+		const month = (date.getMonth() + 1).toString().padStart(2, '0');
+		const day = date.getDate().toString().padStart(2, '0');
+		const hour = date.getHours().toString().padStart(2, '0');
+		const minute = date.getMinutes().toString().padStart(2, '0');
+		const second = date.getSeconds().toString().padStart(2, '0');
+		const milliSecond = date.getMilliseconds().toString().padStart(3, '0');
+		const formattedDate = `${year}${month}${day}${hour}${minute}${second}${milliSecond}`;
+		return formattedDate;
+	}
+
+	function stringSha(text) {
+		const bytes =  CryptoJS.lib.WordArray.create(text)
+		const hash = CryptoJS.SHA1(bytes).toString();
+		return hash;
+	}
+
+	function fileSha(file) {
+		let read = new FileReader();
+		read.readAsArrayBuffer(file)
+		read.onload = function () {
+			(async function () {
+				console.log(CryptoJS.SHA1(read.result).toString());
+			})();
+		}
+	}
+
+	function b64toFile(data, fileName) {
+    	var arr = data.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+		while (n--) {
+		u8arr[n] = bstr.charCodeAt(n);
+		}
+		return new File([u8arr], fileName, { type: mime });
 	}
 
 	function mindMapSaveAsHtmlCreateFile() {
@@ -246,8 +344,18 @@
 	}
 
 	$: if ($mindmapSaveAsSvg) {
-		mindMapSaveAsSvgCreateFile();
+		svgDownload();
 		mindmapSaveAsSvg.update(n => false)
+	}
+
+	$: if ($mindmapSaveAsPng) {
+		pngDownload();
+		mindmapSaveAsPng.update(n => false)
+	}
+
+	$: if ($mindmapShareByGithub) {
+		getGithubUrl().then(url=> copy(url));
+		mindmapShareByGithub.update(n => false)
 	}
 
 	$: if ($mindmapSaveAsHtml) {
@@ -264,16 +372,29 @@
 		}
 	}
 
+	const mindmapDiv = spring(0, {
+		precision: 0.1,
+		soft: true
+	});
+
+	$: if($show) {
+		mindmapDiv.set(28);
+	} else {
+		mindmapDiv.set(0);
+	}
+
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
-<div bind:clientWidth={w} bind:clientHeight={h} style="width:96vw; height:96vh">
+
+<div bind:clientWidth={w} bind:clientHeight={h} style="width: {98-$mindmapDiv}vw; height:98vh; margin-left: {$mindmapDiv}vw" >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<svg id="markmap" bind:this={mindmap} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 		style="width:100%; height:100%" on:click={handleHide}>
 	</svg>
 </div>
+
 <style>
 
 	svg {

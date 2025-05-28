@@ -1,11 +1,13 @@
 {
   "name": "mymarkmapapp",
   "version": "0.0.1",
+  "private": true,
+  "homepage": "https://mind.86868866.xyz",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && touch build/.nojekyll && gh-pages -d build -t true"
+    "deploy": "npm run build && touch build/.nojekyll && cp CNAME build/CNAME && gh-pages -d build -t true"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^1.0.3",
@@ -15,15 +17,20 @@
   },
   "type": "module",
   "dependencies": {
+    "@octokit/core": "^6.1.2",
     "@sveltejs/adapter-static": "^1.0.6",
     "codejar": "^3.7.0",
+    "copy-to-clipboard": "^3.3.3",
     "file-saver-es": "^2.0.5",
     "gh-pages": "^5.0.0",
     "highlight.js": "^11.9.0",
+    "js-base64": "^3.7.7",
     "js-yaml": "^4.1.0",
     "markmap-common": "^0.15.6",
     "markmap-lib": "^0.15.8",
     "markmap-view": "^0.15.8",
-    "node-emoji": "^1.11.0"
+    "node-emoji": "^1.11.0",
+    "svelte-persisted-store": "^0.9.4",
+    "svrollbar": "^0.12.0"
   }
 }

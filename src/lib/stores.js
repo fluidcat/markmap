@@ -1,6 +1,7 @@
 import {
-	writable
+	writable, get
 } from 'svelte/store';
+import { persisted } from 'svelte-persisted-store'
 
 export const show = writable(false);
 export const defaultTemplate = `---
@@ -10,101 +11,48 @@ maxWidth: 300
 # Titre
 `;
 
-export const markdownSource = writable(decodeURI(`---
+// export const markdownSource = writable(decodeURI(`---
+export const markdownSource = persisted('md-source-key', decodeURI(`---
 maxWidth: 600
 ---
 
-# myMarkmap
+# 一个\`#\`表示中心主题
+## 开头每多一个\`#\`表示往下发散下级分支
+## 比如两个\`##\`
+### 三个\`###\`
+#### 四个\`####\`
+### 没有下级，但是有内容项可以用"\`-\`加空格"
+- 打车费: 100
+- 餐饮费: 34
+- 高温补贴: 500
 
-## Un outil libre \\\\  et gratuit
+## 建议空行写法
 
-### [Sources](https://forge.apps.education.fr/myMarkmap/myMarkmap.forge.apps.education.fr) sur la Forge des\\\\Communs Numériques Éducatifs
-### _Auteur_ : [Cédric Eyssette](https://eyssette.forge.apps.education.fr/)
-### Créé à partir du \\\\  logiciel [markmap](https://markmap.js.org/)
+- 比如这里
+- 看起来更加清晰
+- for Emacs
 
-## Pour faire des \\\\  cartes mentales
+## 其他功能介绍
 
-- Clic sur ✒️ en haut à gauche pour **éditer** \\\\ sa carte mentale (_raccourci clavier : \`e\`_) \\\\ On utilise le Markdown pour créer des branches
-  - \`# Titre\`  pour le niveau 1
-  - \`## Sous-titre\`  pour le niveau 2
-  - \`### Niveau 3\`,  \`#### Niveau 4\` …
-  - Ou bien, on fait une liste à puces \\\\ \`- Niveau 3\` \\\\ 　\`  - Niveau 4\` \\\\ \`- Niveau 3\` \\\\ (on ajoute 2 espaces avant  \\\\ pour  passer à un autre niveau)
-- Clic sur 👓   pour **cacher** la fenêtre d'édition \\\\et voir seulement la carte mentale \\\\ (_raccourci clavier : \`Escape\`_)
-- **Enregistrer** et \\\\partager sa \\\\carte mentale
-  - Clic sur 💾 pour **enregistrer**  la carte au format _svg_ \\\\[image fixe]  (_raccourci clavier : \`s\`_)
-  - Clic sur 🌐 pour **enregistrer** au format HTML \\\\[interactivité possible] (_raccourci clavier : \`h\`_)
-  - Clic sur 🔗 pour copier un **lien de partage** \\\\de la carte mentale (_raccourci clavier : \`l\`_)
-    - Ajouter \`?m=0\` dans l'URL pour cacher le menu
-  - Il est recommandé d'enregistrer le texte \\\\de sa carte mentale quelque part pour \\\\pouvoir modifier plus tard sa carte mentale
-    - On peut mettre son texte \\\\ **sur une forge** ou sur [CodiMD](https://codimd.apps.education.fr)  \\\\ et l'afficher avec myMarkmap <!--fold-->
-      - \\\\ \`https://mymarkmap.vercel.app/#URL\`
-      - En cas de problème : \\\\ \`https://mymarkmap.vercel.app/#https://corsproxy.io/%3FURL\`
-      - Sur une instance Gitlab, il faut utiliser un fichier \`.gitlab-ci.yml\` pour publier le fichier md sur une page publique et utiliser cette adresse comme URL
+Note that if blocks and lists appear at the same level, the lists will be ignored.
 
-## Comment naviguer \\\\dans la carte ?
-- \\\\\\\\Clic sur les **cercles** à l'intersection \\\\ des différentes branches pour \\\\ afficher ou masquer la suite
-  - \\\\**Alt+clic** sur un cercle pour afficher \\\\\ seulement la branche en question
-- **Autres raccourcis**
-  - **Alt+clic** sur le texte d'une branche pour la masquer
-  - \`m\` pour masquer ou réafficher la barre de menu
-  - \`r\` pour désactiver ou réactiver le redimensionnement automatique
+### Lists
 
-## Usages plus \\\\  avancés  <!--fold-->
-
-### Des balises pour \\\\ **contrôler l'affichage** \\\\ de la carte
-
-#### **Markdown**  <!--fold-->
-
-- \`**texte**\` : pour mettre en **gras**
-- \`_texte_\` : pour mettre en _italiques_
-- \`[lien](URL)\` : pour insérer un [lien](https://eyssette.forge.apps.education.fr/)
-- \`![](URL)\` : pour insérer une image
-	- \`![h​-25](URL)\` : pour spécifier \\\\la hauteur de l'image (en pixels)
-- \`\`\` \`code\` \`\`\` : Pour insérer du \`code\` 
-- \`==texte==\`: Pour surligner du ==texte==
-- \`++texte++\`: Pour souligner du ++texte++
-
-#### **HTML** <!--fold-->
-
-- \`<br>\` ou \`\\\\\` pour forcer le passage à la ligne
-- \`<span style="...">texte</span>\` \\\\ pour changer le style d'un élément
-  
-#### **Autres \\\\ balises** <!--fold-->
-
-- \`<!--fold-->\` en fin de ligne pour que les \\\\ sous-branches soient cachées par défaut : \\\\ il faut cliquer sur le cercle pour afficher la suite<!-- fold-->
-    - Cette branche est cachée par défaut !
-    - Cette branche aussi !
-- \`:code_emoji:\` : pour insérer un code pour un emoji [:link:](https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json)
-- \`{{partie masquée}}\` pour masquer une partie \\\\ d'un texte :  voici par exemple un {{passage}} masqué \\\\ (cliquer dessus pour afficher / masquer à nouveau)
-
-### Un **en-tête** (YAML) \\\\ pour des options de \\\\configuration plus avancées <!--fold-->
-
-- Pour spécifier la largeur \\\\ maximale d'une branche
-	- \`\`\`maxWidth: 300\`\`\`
-- Pour empêcher le changement de \\\\couleur des sous-branches à partir \\\\d'un certain niveau
-	- \`\`\`colorFreezeLevel: 2\`\`\`  \\\\ (pour que chaque branche \\\\ait sa propre couleur)
-- Pour ajouter des styles \\\\CSS spécifiques
-	- \`\`\`style: strong{color:red}\`\`\`
-- Pour ajouter un \\\\thème spécifique
-	- \`\`\`theme: focus\`\`\`
-  - Thèmes disponibles : \\\\ \`focus\`, \`nolines\` et \`black\`
-- Pour avoir des lignes droites \\\\plutôt que des courbes
-	- \`\`\`curves: false\`\`\`
-- Pour ajouter un titre
-	- \`\`\`title: Mon titre\`\`\`
-- Pour masquer par défaut \\\\les sous-branches à partir\\\\ d'un certain niveau
-	- \`\`\`initialExpandLevel: 1\`\`\`
-- Pour forcer l'ouverture des \\\\liens dans un nouvel onglet
-  - \`\`\`openLinksInNewTab: true\`\`\`
-- Pour permettre l'ouverture automatique\\\\des liens et empêcher l'affichage du message\\\\ de confirmation pour quitter la page
-  - \`\`\`disableWarningMessage: true\`\`\`
-- Pour contrôler l'interactivité
-  - \`\`\`automaticResize: false\`\`\` \\\\pour supprimer le \\\\redimensionnement automatique
-  - \`\`\`focusOnBranch: true\`\`\` \\\\pour focaliser sur la branche \\\\sur laquelle on clique et fermer\\\\automatiquement les autres
-  - \`\`\`showMenu: false\`\`\` \\\\pour cacher le menu
+- 超链接功能, 如：[百度搜索](https://www.baidu.com)
+- 加粗写法：**重点加粗** 
+- 删除线：~~del~~ 
+- 文字倾斜：*italic* 
+- 文字高亮：==highlight==
+- 行内代码：\`inline code\`
+- [x] 打勾，中括号前面不能有文字
+- [ ] 不打勾，中括号前面不能有文字
+- 数学公式: Katex: $x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$ <!-- fold -->
+  - [其他公式例子](#?d=gist:af76a4c245b302206b16aec503dbe07b:katex.md) 
 `));
 export const baseURL = writable('');
 export const mindmapSaveAsSvg = writable(false);
+export const mindmapSaveAsPng = writable(false);
 export const mindmapSaveAsHtml = writable(false);
+export const mindmapShareByGithub = writable(false);
 export const wValue = writable();
 export const hValue = writable();

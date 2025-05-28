@@ -18,6 +18,7 @@
 		markdownSource
 	} from './stores.js'
 	import url from './url.js';
+	import { spring } from "svelte/motion";
 
 	let textArea;
 	let editor;
@@ -47,7 +48,7 @@
 
 	let CodeJar;
 	let firefoxVersion = 0;
-	
+
 	onMount(async () => {
 		({
 			CodeJar
@@ -57,7 +58,7 @@
 		firefoxVersion = matchFirefoxVersion ? parseInt(matchFirefoxVersion[1]) : 0;
 	})
 
-	$: if ($show == true) {		
+	$: if ($show == true) {
 		setTimeout(function () {
 			textArea.firstChild.focus();
 			if(firefoxVersion >= 136) {
@@ -70,29 +71,66 @@
 		{if (jar.toString() != $markdownSource) {markdownSource.update(n=>code)}}
 	)}
 
+	const editor_p = spring(-40, {
+		precision: 0.01,
+		soft: true
+	});
+
+	$: if($show) {
+		editor_p.set(0);
+	} else {
+		editor_p.set(-40);
+	}
+
 </script>
 
 <div bind:this={textArea}>
 	{#await CodeJar}
 		<div>Éditeur en cours de chargement</div>
 	{:then}
-		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class:hidden={!$show} class="editor"></pre>
+		<pre bind:this={editor} contenteditable="true" bind:textContent={$markdownSource} class="editor"
+			style="margin-left: {$editor_p}vw"></pre>
 	{:catch error}
 		<textarea bind:value={$markdownSource} rows="20" cols="50" class:hidden={!$show}></textarea>
 	{/await}
 </div>
 
 <style>
+	::-webkit-scrollbar {
+		width: 4px;
+		height: 4px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: rgb(239, 239, 239);
+		border-radius: 2px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: #bfbfbf;
+		border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: #bfbfbf;
+	}
+
+	::-webkit-scrollbar-corner {
+		background: #bfbfbf;
+	}
+
 	textarea,
 	:global(.editor) {
 		font-size: 14px;
 		margin-top: 5em;
 		margin-left: 1em;
-		width: 420px;
-		height: 50vh;
+		width: 28vw;
+		height: 85vh;
 		position: absolute;
 		z-index: 1;
-		background-color: white;
+		background-color: #ffffffde;
+		white-space: pre-wrap;
+		outline: none;
 	}
 	@media screen and (max-width:500px) {
 		textarea,:global(.editor) {
@@ -115,7 +153,6 @@
 		line-height: 20px;
 		padding: 10px;
 		tab-size: 2;
-		resize: both!important;
 	}
 
 	:global(.language-xml *) {

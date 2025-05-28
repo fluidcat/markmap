@@ -3,6 +3,8 @@
 		show,
 		baseURL,
 		mindmapSaveAsSvg,
+		mindmapSaveAsPng,
+		mindmapShareByGithub,
 		mindmapSaveAsHtml,
 		markdownSource,
 		defaultTemplate,
@@ -10,7 +12,8 @@
 	export let source;
 	export let disableWarningMessage;
 	import url from './url.js';
-	
+	import { tooltip } from './tooltip';
+
 	import { fade, fly } from 'svelte/transition';
 	import {
 		saveAs
@@ -35,6 +38,10 @@
 		mindmapSaveAsSvg.update(n => true)
 	}
 
+	function menuSaveAsPng() {
+		mindmapSaveAsPng.update(n => true)
+	}
+
 	function menuSaveAsHtml() {
 		mindmapSaveAsHtml.update(n => true)
 	}
@@ -47,6 +54,10 @@
 	}
 
 	function menuShare() {
+		mindmapShareByGithub.update(n => true)
+	}
+
+	function menuShare_bak() {
 		toastNotification();
 		encodageHash = encodeURI(source);
 		urlToShare = $baseURL + '/#' + encodageHash
@@ -107,17 +118,17 @@
 <svelte:window on:keydown={handleKeydown} on:beforeunload={beforeunload} />
 
 {#if showMenu}
-	<nav id="menu" bind:this={menu}>
-			{#if $show}<a href="#edit" on:click|preventDefault={menuView} title="Afficher seulement la carte">👓</a>{:else}<a href="#edit" on:click|preventDefault={menuEdit} title="Afficher l'éditeur">✒️</a>{/if}
-			<a href="#saveHTML" on:click|preventDefault={menuSaveAsHtml} title="Sauvegarder au format HTML (interactif)">🌐</a>
-			<a href="#saveSVG" on:click|preventDefault={menuSaveAsSvg} title="Sauvegarder au format SVG (image fixe)">💾</a>
-			<a href="#share" on:click|preventDefault={menuShare} title="Créer un lien de partage rapide">🔗</a>
-			{#if showNotification}
-			<div id="shareNotification" in:fly="{{ y: 50, duration: 1000 }}" out:fade>Lien copié dans le presse-papier !</div>
-			{/if}
-			<a href="{$baseURL}" target="_blank" rel="noreferrer" title="Afficher le tutoriel">❓</a>
-			{#if $show}<a href="#reset" on:click|preventDefault={menuReset} title="Supprimer le contenu de cette carte">🧹</a>{/if}
-	</nav>
+    <nav id="menu" bind:this={menu}>
+        {#if $show}<a href="#edit" on:click|preventDefault={menuView}>👓</a>{:else}<a href="#edit" on:click|preventDefault={menuEdit}>✒️</a>{/if}
+            <!-- <a href="#saveHTML" use:tooltip title='保存为网页' on:click|preventDefault={menuSaveAsHtml}>🌐</a> -->
+            <a href="#saveSVG" use:tooltip title='保存为矢量图' on:click|preventDefault={menuSaveAsSvg}>SVG</a>
+            <a href="#saveSVG" use:tooltip title='保存为图片' on:click|preventDefault={menuSaveAsPng}>PNG</a>
+            <a href="#share" use:tooltip title='生成引用链接' on:click|preventDefault={menuShare}>🔗</a>
+            {#if showNotification}
+            <div id="shareNotification" in:fly="{{ y: 50, duration: 1000 }}" out:fade>引用链接已复制到剪切板</div>
+            {/if}
+            <!-- <a href="{$baseURL}" target="_blank" rel="noreferrer">❓</a> -->
+    </nav>
 {/if}
 
 <style>
